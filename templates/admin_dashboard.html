@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-12">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div>
+            <div>
+            <h1 class="text-3xl font-extrabold text-gray-950">Панель администратора студии</h1>
+            <p class="text-gray-500 mt-1">Управление онлайн-записями и синхронизация с MS Access</p>
+            <a href="{{ url_for('admin_logout') }}" class="text-xs text-red-400 hover:text-red-600 underline transition inline-block mt-2">
+                Выйти из сессии администратора
+            </a>
+            </div>
+            <h1 class="text-3xl font-extrabold text-gray-950">Панель администратора студии</h1>
+            <p class="text-gray-500 mt-1">Управление онлайн-записями и синхронизация с MS Access</p>
+        </div>
+        {% if new_orders %}
+        <form action="{{ url_for('mark_imported') }}" method="POST">
+            <button type="submit" class="bg-pink-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-pink-700 transition shadow-md cursor-pointer">
+                ✓ Считать выбранные записи внесенными в БД
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <span class="w-3 h-3 bg-amber-500 rounded-full animate-ping"></span>
+            Новые заявки (Требуют фиксации в Access) — {{ new_orders|length }}
+        </h2>
+        
+        {% if not new_orders %}
+            <p class="text-gray-400 py-4 text-center">Все записи успешно перенесены. Новых заявок нет.</p>
+        {% else %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-gray-400 text-sm font-semibold uppercase">
+                            <th class="pb-3">Клиент / Телефон</th>
+                            <th class="pb-3">Дата и Время</th>
+                            <th class="pb-3">Услуга</th>
+                            <th class="pb-3">Мастер</th>
+                            <th class="pb-3">Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50 text-gray-700 text-sm">
+                        {% for order in new_orders %}
+                            <tr class="hover:bg-gray-50/50 transition">
+                                <td class="py-4 font-medium text-gray-900">
+                                    {{ order.client_name }}<br>
+                                    <span class="text-xs text-gray-400">{{ order.client_phone }}</span>
+                                </td>
+                                <td class="py-4">
+                                    <span class="font-semibold text-pink-600">{{ order.date }}</span> в {{ order.time }}
+                                </td>
+                                <td class="py-4">{{ order.service_name }}</td>
+                                <td class="py-4 text-gray-500">{{ order.master_name }}</td>
+                                <td class="py-4">
+                                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-200">Ожидает БД</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 opacity-75">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Архив синхронизированных записей (В базе данных)</h2>
+        {% if not imported_orders %}
+            <p class="text-gray-400 py-4 text-center">История пуста.</p>
+        {% else %}
+            <div class="overflow-x-auto max-h-60 overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                    <tbody class="divide-y divide-gray-50 text-gray-600 text-sm">
+                        {% for order in imported_orders %}
+                            <tr>
+                                <td class="py-3 font-medium text-gray-400 line-through">{{ order.client_name }}</td>
+                                <td class="py-3 text-gray-400">{{ order.date }} {{ order.time }}</td>
+                                <td class="py-3 text-gray-400">{{ order.service_name }}</td>
+                                <td class="py-3 text-gray-400">{{ order.master_name }}</td>
+                                <td class="py-3">
+                                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-gray-50 text-gray-400 border border-gray-200">Внесено</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

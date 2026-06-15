@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="max-w-2xl mx-auto px-4 py-16 text-center">
+    <div class="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-sm">
+        ✓
+    </div>
+
+    <h1 class="text-3xl font-extrabold text-gray-950 mb-3">Вы успешно записаны!</h1>
+    <p class="text-gray-500 text-lg mb-8">Спасибо, {{ name }}. Мы уже ждем вас в нашей студии!</p>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-left space-y-4 max-w-md mx-auto mb-10">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-gray-400 border-b border-gray-50 pb-2">Детали визита</h2>
+        
+        <div>
+            <span class="text-xs text-gray-400 block">Услуга</span>
+            <span class="font-bold text-gray-900 text-base">{% if service %}{{ service.name }}{% else %}Процедура{% endif %}</span>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <span class="text-xs text-gray-400 block">Дата визита</span>
+                <span class="font-semibold text-gray-800">{{ date }}</span>
+            </div>
+            <div>
+                <span class="text-xs text-gray-400 block">Время визита</span>
+                <span class="font-semibold text-gray-800">{{ time }}</span>
+            </div>
+        </div>
+
+        <div class="pt-2 border-t border-gray-50">
+            <span class="text-xs text-gray-400 block">Стоимость визита</span>
+            <span class="text-xl font-black text-pink-600">{% if service %}{{ service.price }} ₽{% else %}0 ₽{% endif %}</span>
+        </div>
+    </div>
+
+    <a href="{{ url_for('index') }}" class="inline-block bg-gray-900 text-white font-semibold px-6 py-3 rounded-xl hover:bg-gray-800 transition">
+        На главную страницу
+    </a>
+</section>
+{% endblock %}

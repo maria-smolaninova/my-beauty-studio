@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-12">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-gray-950 tracking-tight">Наши услуги</h1>
+        <p class="text-gray-500 mt-2 text-lg">Профессиональный уход для вашей идеальной красоты</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for service in services %}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between hover:shadow-md transition duration-300">
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-2">{{ service.name }}</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">{{ service.description }}</p>
+            </div>
+            
+            <div class="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
+                <span class="text-2xl font-black text-pink-600">{{ service.price }} ₽</span>
+                <a href="{{ url_for('booking', service_id=service.id) }}" class="bg-pink-600 text-white font-medium px-5 py-2.5 rounded-xl hover:bg-pink-700 active:scale-95 transition duration-200 shadow-sm shadow-pink-100">
+                    Записаться
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

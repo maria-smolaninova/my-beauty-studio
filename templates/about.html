@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="max-w-5xl mx-auto px-4 py-12">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-gray-950 tracking-tight">О нашей студии</h1>
+        <p class="text-gray-500 mt-2 text-lg">Пространство, где рождается уверенность в себе</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="rounded-2xl overflow-hidden shadow-md">
+            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=800&auto=format&fit=crop" alt="Интерьер студии" class="w-full h-[400px] object-cover hover:scale-105 transition duration-500">
+        </div>
+
+        <div class="space-y-6">
+            <h2 class="text-2xl font-bold text-gray-900">Добро пожаловать в Beauty Studio!</h2>
+            <p class="text-gray-600 leading-relaxed">
+                Мы создали не просто салон красоты, а место, куда хочется возвращаться за атмосферой заботы, тепла и безупречного сервиса. Наша цель — подчеркнуть вашу естественную уникальность и подарить незабываемые минуты отдыха от городской суеты.
+            </p>
+            <p class="text-gray-600 leading-relaxed">
+                В нашей студии объединены лучшие бьюти-направления: парикмахерское искусство, сложнейшие техники окрашивания, идеальный смарт-педикюр, эстетический маникюр, а также профессиональное оформление взгляда.
+            </p>
+            <div class="pt-4 border-t border-gray-100 flex justify-between text-center">
+                <div>
+                    <span class="block text-3xl font-extrabold text-pink-600">5+</span>
+                    <span class="text-xs text-gray-400 uppercase font-semibold">Лет работы</span>
+                </div>
+                <div>
+                    <span class="block text-3xl font-extrabold text-pink-600">1000+</span>
+                    <span class="text-xs text-gray-400 uppercase font-semibold">Довольных клиентов</span>
+                </div>
+                <div>
+                    <span class="block text-3xl font-extrabold text-pink-600">100%</span>
+                    <span class="text-xs text-gray-400 uppercase font-semibold">Стерильность</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

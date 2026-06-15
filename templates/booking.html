@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto px-4 py-12">
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-gray-950">Онлайн-запись</h1>
+        <p class="text-gray-500 mt-2">Выберите удобную дату, время, мастера и услугу</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-10">
+        <form action="{{ url_for('booking') }}" method="POST" id="bookingForm" class="space-y-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Ваше Имя</label>
+                    <input type="text" name="name" required placeholder="Иван" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Номер телефона</label>
+                    <input type="tel" name="phone" required placeholder="+7 (999) 000-00-00" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Выберите услугу</label>
+                    <select name="service" id="serviceSelect" required class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition">
+                        <option value="" disabled selected>-- Выберите процедуру --</option>
+                        {% for service in services %}
+                            <option value="{{ service.id }}" data-category="{{ service.category }}">{{ service.name }} ({{ service.price }} ₽)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Выберите мастера</label>
+                    <select name="master" id="masterSelect" required class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition">
+                        <option value="" disabled selected>-- Выберите специалиста --</option>
+                        {% for master in masters %}
+                            <option value="{{ master.id }}" data-category="{{ master.category }}">{{ master.name }} ({{ master.specialization }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Выберите дату</label>
+                <input type="date" name="date" id="dateInput" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition">
+            </div>
+
+            <div id="timeSection" class="hidden border-t border-gray-100 pt-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-4">Доступное время</label>
+                <div id="timeSlots" class="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                </div>
+                <input type="hidden" name="time" id="selectedTime" required>
+            </div>
+
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-pink-600 text-white font-bold py-4 rounded-xl hover:bg-pink-700 active:scale-[0.99] transition duration-150 shadow-md shadow-pink-100 cursor-pointer">
+                    Подтвердить запись
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- ЧАСТЬ 1: Настройки дат и параметров URL ---
+        const dateInput = document.getElementById('dateInput');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceId = urlParams.get('service_id');
+        if (serviceId) {
+            document.getElementById('serviceSelect').value = serviceId;
+            document.getElementById('serviceSelect').dispatchEvent(new Event('change'));
+        }
+
+        // --- ЧАСТЬ 2: Фильтрация «Услуга <-> Мастер» ---
+        const serviceSelect = document.getElementById('serviceSelect');
+        const masterSelect = document.getElementById('masterSelect');
+
+        const allServices = Array.from(serviceSelect.options);
+        const allMasters = Array.from(masterSelect.options);
+
+        serviceSelect.addEventListener('change', function() {
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            const category = selectedOption.getAttribute('data-category');
+
+            if (!category) return;
+
+            const selectedMasterOption = masterSelect.options[masterSelect.selectedIndex];
+            const currentMasterCategory = selectedMasterOption ? selectedMasterOption.getAttribute('data-category') : null;
+
+            if (currentMasterCategory !== category) {
+                masterSelect.innerHTML = '';
+                allMasters.forEach(option => {
+                    if (option.value === "" || option.getAttribute('data-category') === category) {
+                        masterSelect.appendChild(option.cloneNode(true));
+                    }
+                });
+                masterSelect.value = ""; 
+            }
+        });
+
+        masterSelect.addEventListener('change', function() {
+            const selectedOption = masterSelect.options[masterSelect.selectedIndex];
+            const category = selectedOption.getAttribute('data-category');
+
+            if (!category) return;
+
+            const selectedServiceOption = serviceSelect.options[serviceSelect.selectedIndex];
+            const currentServiceCategory = selectedServiceOption ? selectedServiceOption.getAttribute('data-category') : null;
+
+            if (currentServiceCategory !== category) {
+                serviceSelect.innerHTML = '';
+                allServices.forEach(option => {
+                    if (option.value === "" || option.getAttribute('data-category') === category) {
+                        serviceSelect.appendChild(option.cloneNode(true));
+                    }
+                });
+                serviceSelect.value = ""; 
+            }
+        });
+
+        // --- ЧАСТЬ 3: Загрузка времени с учетом длительности услуги ---
+        function updateAvailableTimes() {
+            const selectedDate = dateInput.value;
+            const serviceId = serviceSelect.value;
+            const masterId = masterSelect.value;
+
+            if (!selectedDate || !serviceId || !masterId) {
+                document.getElementById('timeSection').classList.add('hidden');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('date', selectedDate);
+            formData.append('service_id', serviceId);
+            formData.append('master_id', masterId);
+
+            fetch('/available_times', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const slotsContainer = document.getElementById('timeSlots');
+                slotsContainer.innerHTML = ''; 
+                document.getElementById('selectedTime').value = ''; 
+                
+                if (data.available.length === 0) {
+                    slotsContainer.innerHTML = '<p class="text-gray-400 col-span-full text-center py-2">На это сочетание услуги и мастера нет доступных окон.</p>';
+                } else {
+                    data.available.forEach(time => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.textContent = time;
+                        btn.className = 'py-2.5 text-sm font-semibold rounded-xl border border-gray-200 text-gray-700 hover:border-pink-500 hover:text-pink-600 transition text-center cursor-pointer';
+                        
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('#timeSlots button').forEach(b => b.classList.remove('bg-pink-600', 'text-white', 'border-pink-600'));
+                            this.classList.add('bg-pink-600', 'text-white', 'border-pink-600');
+                            document.getElementById('selectedTime').value = time;
+                        });
+                        slotsContainer.appendChild(btn);
+                    });
+                }
+                document.getElementById('timeSection').classList.remove('hidden');
+            });
+        }
+
+        dateInput.addEventListener('change', updateAvailableTimes);
+        serviceSelect.addEventListener('change', updateAvailableTimes);
+        masterSelect.addEventListener('change', updateAvailableTimes);
+
+        // --- ЧАСТЬ 4: Проверка перед отправкой ---
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            const time = document.getElementById('selectedTime').value;
+            if (!time) {
+                e.preventDefault();
+                alert('Пожалуйста, выберите удобное время для записи.');
+            }
+        });
+    });
+</script>
+{% endblock %}

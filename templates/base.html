@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Studio — Салон красоты</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <style>
+    body {
+        /* Flask сам найдет картинку в папке static/css/ */
+        background-image: url("{{ url_for('static', filename='css/bg-clouds.png.jpg') }}");
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+</style>
+</head>
+<body class="flex flex-col min-h-screen font-sans">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <a href="{{ url_for('index') }}" class="text-2xl font-bold text-pink-600 hover:text-pink-700 transition">
+                        Beauty Studio
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="{{ url_for('index') }}" class="text-gray-600 hover:text-pink-600 font-medium transition">Главная</a>
+                    <a href="{{ url_for('about') }}" class="text-gray-600 hover:text-pink-600 font-medium transition">О нас</a>
+                    <a href="{{ url_for('services') }}" class="text-gray-600 hover:text-pink-600 font-medium transition">Услуги</a>
+                    <a href="{{ url_for('booking') }}" class="text-gray-600 hover:text-pink-600 font-medium transition">Запись</a>
+                    
+                    <span class="text-gray-300">|</span>
+                    
+                    <a href="{{ url_for('admin_dashboard') }}" class="text-gray-400 hover:text-gray-600 text-sm font-medium transition flex items-center gap-1" title="Панель администратора">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Админ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-6 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+            &copy; 2026 Beauty Studio. Все права защищены.
+        </div>
+    </footer >
+
+</body>
+</html>
