@@ -28,12 +28,12 @@
                         Beauty Studio
                     </a>
                 </div>
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="{{ url_for('index') }}" class="text-gray-600 hover:text-pink-600 font-medium transition">Главная</a>
-                    <a href="{{ url_for('about') }}" class="text-gray-600 hover:text-pink-600 font-medium transition">О нас</a>
-                    <a href="{{ url_for('services') }}" class="text-gray-600 hover:text-pink-600 font-medium transition">Услуги</a>
-                    <a href="{{ url_for('booking') }}" class="text-gray-600 hover:text-pink-600 font-medium transition">Запись</a>
-                    
+               <div class="flex items-center space-x-2 overflow-x-auto whitespace-nowrap py-2 max-w-[65vw] sm:max-w-full [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <a href="{{ url_for('index') }}" class="text-xs sm:text-sm md:text-base font-medium text-gray-600 hover:text-pink-600 px-2.5 py-1.5 rounded-lg transition bg-white/40 md:bg-transparent shadow-sm md:shadow-none">Главная</a>
+    <a href="{{ url_for('about') }}" class="text-xs sm:text-sm md:text-base font-medium text-gray-600 hover:text-pink-600 px-2.5 py-1.5 rounded-lg transition bg-white/40 md:bg-transparent shadow-sm md:shadow-none">О нас</a>
+    <a href="{{ url_for('services') }}" class="text-xs sm:text-sm md:text-base font-medium text-gray-600 hover:text-pink-600 px-2.5 py-1.5 rounded-lg transition bg-white/40 md:bg-transparent shadow-sm md:shadow-none">Услуги</a>
+    <a href="{{ url_for('booking') }}" class="text-xs sm:text-sm md:text-base font-semibold text-white bg-pink-500 hover:bg-pink-600 px-3 py-1.5 rounded-xl shadow-sm transition">Запись</a>
+                </div>
                     <span class="text-gray-300">|</span>
                     
                     <a href="{{ url_for('admin_dashboard') }}" class="text-gray-400 hover:text-gray-600 text-sm font-medium transition flex items-center gap-1" title="Панель администратора">
